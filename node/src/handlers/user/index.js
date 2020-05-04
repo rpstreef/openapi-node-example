@@ -1,14 +1,13 @@
 
 const middy = require('middy')
 const { httpErrorHandler, httpSecurityHeaders } = require('middy/middlewares')
-
-const { ErrorResponse } = require('../lib/response')
-const standards = require('../lib/standards')
+const { ErrorResponse } = require('../../lib/response')
+const standards = require('../../lib/standards')
 
 const getUser = require('./operations/getUser')
 const postUser = require('./operations/postUser')
 
-const lambdaHandler = middy(async (event, context) => {
+const handler = middy(async (event, context) => {
   const operation = standards.getOperationName(event)
 
   switch (operation) {
@@ -27,4 +26,4 @@ const lambdaHandler = middy(async (event, context) => {
   }
 }).use(httpErrorHandler()).use(httpSecurityHeaders())
 
-module.exports = { lambdaHandler }
+module.exports = { handler }

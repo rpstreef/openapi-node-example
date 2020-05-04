@@ -1,12 +1,12 @@
 
 const middy = require('middy')
 const { httpErrorHandler, httpSecurityHeaders } = require('middy/middlewares')
+const { SuccessResponse } = require('../../lib/response')
 
-const { SuccessResponse } = require('../lib/response')
-const Logger = require('../lib/logger')
-const CorrelationId = require('../lib/correlationId')
+const Logger = require('../../lib/logger')
+const CorrelationId = require('../../lib/correlationId')
 
-const lambdaHandler = middy(async (event, context) => {
+const handler = middy(async (event, context) => {
   const logger = new Logger(event, context)
   const correlationId = new CorrelationId(event).getCorrelationID()
 
@@ -17,4 +17,4 @@ const lambdaHandler = middy(async (event, context) => {
   })
 }).use(httpErrorHandler()).use(httpSecurityHeaders())
 
-module.exports = { lambdaHandler }
+module.exports = { handler }

@@ -2,22 +2,17 @@
 
 const middy = require('middy')
 const { httpErrorHandler, httpSecurityHeaders } = require('middy/middlewares')
-
-const { ErrorResponse } = require('../lib/response')
-const standards = require('../lib/standards')
+const { ErrorResponse } = require('../../lib/response')
+const standards = require('../../lib/standards')
 
 const identityAuthenticate = require('./operations/identityAuthenticate')
 const identityRegister = require('./operations/identityRegister')
 const identityReset = require('./operations/identityReset')
 const identityVerify = require('./operations/identityVerify')
 
-const lambdaHandler = middy(async (event, context) => {
+const handler = middy(async (event, context) => {
   const params = standards.getParams(event)
   const operation = standards.getOperationName(event)
-
-  console.info('Params: ' + JSON.stringify(params))
-  console.info('Operation: ' + JSON.stringify(operation))
-  console.info('Event: ' + JSON.stringify(event))
 
   switch (operation) {
     // Login OR Renew authentication token
@@ -44,4 +39,4 @@ const lambdaHandler = middy(async (event, context) => {
   }
 }).use(httpErrorHandler()).use(httpSecurityHeaders())
 
-module.exports = { lambdaHandler }
+module.exports = { handler }
